@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<form class="container mt-5" style="max-width: 800px;" method="post">
+    {% csrf_token %}
+    {{form | crispy}}
+    {%block btn%}
+    <button class="btn btn-warning mb-5">Save changes</button>
+    {%endblock%}
+</form>
+
+{% endblock %}

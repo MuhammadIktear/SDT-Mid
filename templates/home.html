@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<style>
+    .card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(219, 214, 214) 50%, rgb(126, 125, 125) 100%);
+        border: none;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 16px rgba(0, 0, 0, 0.2);
+    }
+    .hero-section {
+        padding: 60px 0;
+        background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgb(26, 26, 26) 35%, rgb(39, 46, 47) 100%);
+        color: #ffffff;
+        text-align: center;
+    }
+    .hero-text {
+        font-size: 1.25em;
+        line-height: 1.6;
+    }
+    .hero-image img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .filter-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 20px;
+    }
+    .btn:hover{
+        transform: translateY(-2px);
+    }
+    .styled {
+        display: inline-block;
+        padding: 8px;
+        color: #ffffff;
+        margin-bottom: 15px;
+        background-color: rgb(51, 74, 87);
+        border-radius: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 hero-text">
+                <h1>Welcome to CarZenith</h1>
+                <p>CarZenith is a premier online car selling platform offering a wide range of vehicles to suit every need and budget. With user-friendly search tools, detailed listings, and secure transactions, CarZenith simplifies the car buying experience, making it easy to find and purchase your dream car from the comfort of home.</p>
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'create_car' %}" class="btn btn-warning text-dark">Get Started</a>
+                {%endif%}
+            </div>
+            <div class="col-md-6 hero-image">
+                <img src="/static/car.webp" alt="Car image">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Brand Filtering -->
+<section class="BrandFilter container mt-5">
+    <div class="filter-buttons">
+        {% for brand in brands %}
+            <a href="{%url 'filter_brand' brand.slug%}" class="btn btn-secondary">{{ brand.name }}</a>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Car Listing -->
+<section class="container mt-5">
+    <h3 href="#" class="styled">Total Cars Found: <span>{{cars|length}}</span></h3>
+    <div class="row justify-content-around">
+        {% for car in cars %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ car.name }}</h5>
+                    <p class="card-text"><strong>Quantity:</strong> {{ car.quantity }}</p>
+                    <p class="card-text"><strong>Price:</strong> ${{ car.price }}</p>
+                    <p class="card-text"><strong>Brand:</strong> {{ car.brand.name }}</p>
+                    <p class="card-text">{{ car.description|truncatewords:20 }}</p>
+                    <a href="{% url 'car_details' car.id %}" class="btn btn-primary">See Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}
